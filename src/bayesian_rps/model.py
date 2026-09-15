@@ -12,6 +12,29 @@ Probabilities = Tuple[float, float, float]
 
 
 @dataclass
+class GlobalDirichletModel:
+    """Learn one global distribution for the opponent's next move."""
+
+    alpha: Probabilities = (1.0, 1.0, 1.0)
+    counts: list[int] = field(init=False)
+
+    def __post_init__(self) -> None:
+        if len(self.alpha) != 3 or any(value <= 0 for value in self.alpha):
+            raise ValueError("alpha must contain three positive values")
+        self.counts = [0 for _ in MOVES]
+
+    def predict(self, context: Context) -> Probabilities:
+        """Return P(next opponent move | all observations)."""
+        posterior = [prior + count for prior, count in zip(self.alpha, self.counts)]
+        total = sum(posterior)
+        return tuple(value / total for value in posterior)  # type: ignore[return-value]
+
+    def update(self, context: Context, observed_move: Move) -> None:
+        """Add one observation; the context is deliberately ignored."""
+        self.counts[observed_move] += 1
+
+
+@dataclass
 class ContextualDirichletModel:
     """Learn P(next opponent move | previous pair of moves)."""
 

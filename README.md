@@ -27,6 +27,18 @@ bayesian-rps --opponent previous-move-counter --rounds 500 --seed 0
 The command prints the main metrics and saves a plot with a descriptive name,
 such as `results/game_previous_move_counter_500_0.png`.
 
+The contextual model is used by default. Select the global baseline with:
+
+```powershell
+bayesian-rps --model global --opponent rock-biased --rounds 500 --seed 0
+```
+
+The global model learns one distribution `P(next opponent move)`. The
+contextual model instead learns a separate distribution for each previous pair
+of moves, `P(next opponent move | previous pair)`. Comparing them shows whether
+the extra context is informative enough to compensate for having fewer
+observations in each context.
+
 ## Virtual opponents
 
 - `uniform-random`: chooses Rock, Paper and Scissors independently with equal
@@ -51,3 +63,33 @@ bayesian-rps --opponent previous-move-counter --output results/my_experiment.png
 ```powershell
 python -m pytest
 ```
+
+## Play any two players
+
+The same match engine supports humans, Bayesian players and predefined automatic
+strategies. For example, compare the two Bayesian models:
+
+```powershell
+bayesian-rps-play bayesian-contextual bayesian-global --rounds 500 --seed 0
+```
+
+Play against the contextual model:
+
+```powershell
+bayesian-rps-play human bayesian-contextual --rounds 20
+```
+
+Or play human versus human:
+
+```powershell
+bayesian-rps-play human human --rounds 10
+```
+
+Human moves are hidden while they are entered, so the second player cannot see
+the first player's choice. Both moves are revealed after the round. At the end,
+the CLI reports win/draw/loss rates, mean payoff and move frequencies. For each
+Bayesian player it also reports mean predictive log loss. A match plot is saved
+with a name such as
+`results/match_bayesian_contextual_vs_bayesian_global_500_0.png`. It shows
+cumulative payoff, cumulative move frequencies and, when applicable, running
+mean log loss. Use `--output` to choose a different path.

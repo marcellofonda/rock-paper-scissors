@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass
+from typing import Protocol
 
 from .game import Move, payoff
 from .model import Context, ContextualDirichletModel, Probabilities
@@ -23,15 +24,25 @@ class RoundRecord:
     log_loss: float
 
 
+class PredictiveModel(Protocol):
+    alpha: Probabilities
+
+    def predict(self, context: Context) -> Probabilities: ...
+
+    def update(self, context: Context, observed_move: Move) -> None: ...
+
+
 def simulate(
     opponent: Opponent,
     rounds: int = 500,
     seed: int = 0,
     alpha: Probabilities = (1.0, 1.0, 1.0),
+    model: PredictiveModel | None = None,
 ) -> list[RoundRecord]:
     """Play a complete game using one reproducible random generator."""
     rng = random.Random(seed)
-    model = ContextualDirichletModel(alpha)
+    if model is None:
+        model = ContextualDirichletModel(alpha)
     records: list[RoundRecord] = []
     previous_context: Context | None = None
     previous_payoff: int | None = None

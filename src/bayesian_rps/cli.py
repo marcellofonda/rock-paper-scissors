@@ -3,6 +3,7 @@
 import argparse
 from pathlib import Path
 
+from .model import ContextualDirichletModel, GlobalDirichletModel
 from .opponents import (
     PreviousMoveCounterOpponent,
     RepeatingMarkovOpponent,
@@ -22,12 +23,18 @@ OPPONENTS = {
     "win-stay-lose-shift": WinStayLoseShiftOpponent,
 }
 
+MODELS = {
+    "contextual": ContextualDirichletModel,
+    "global": GlobalDirichletModel,
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Simulate a Bayesian RPS player")
     parser.add_argument(
         "--opponent", choices=OPPONENTS, default="previous-move-counter"
     )
+    parser.add_argument("--model", choices=MODELS, default="contextual")
     parser.add_argument("--rounds", type=int, default=500)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
@@ -36,7 +43,12 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    records = simulate(OPPONENTS[args.opponent](), args.rounds, args.seed)
+    records = simulate(
+        OPPONENTS[args.opponent](),
+        args.rounds,
+        args.seed,
+        model=MODELS[args.model](),
+    )
     mean_payoff = sum(record.payoff for record in records) / len(records)
     mean_log_loss = sum(record.log_loss for record in records) / len(records)
     opponent_name = args.opponent.replace("-", "_")
@@ -45,6 +57,7 @@ def main() -> None:
     image_path = plot_game(records, output)
 
     print(f"Opponent:       {args.opponent}")
+    print(f"Model:          {args.model}")
     print(f"Rounds:         {args.rounds}")
     print(f"Mean payoff:    {mean_payoff:.3f}")
     print(f"Mean log loss:  {mean_log_loss:.3f}")
