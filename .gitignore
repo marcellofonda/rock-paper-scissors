@@ -25,6 +25,12 @@ dist/
 # Generated experiment outputs
 results/
 
+# Zensical generated files
+site/
+.cache/zensical/
+markdown.md
+zensical.md
+
 # Editors
 .idea/
 .vscode/
@@ -33,4 +39,3 @@ results/
 # Operating systems
 .DS_Store
 Thumbs.db
-
