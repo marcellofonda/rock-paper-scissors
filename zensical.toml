@@ -13,6 +13,7 @@ edit_uri = "edit/main/docs/"
 nav = [
   { "Welcome" = "index.md" },
   { "The Bayesian Model" = "model.md" },
+  { "From Model to Code" = "implementation.md" },
 ]
 
 # extra_css = ["stylesheets/extra.css"]
