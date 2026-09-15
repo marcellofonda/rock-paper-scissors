@@ -20,13 +20,17 @@ class Opponent(Protocol):
 
 
 @dataclass(frozen=True)
-class RandomOpponent:
+class UniformRandomOpponent:
+    """Choose every move independently with equal probability."""
+
     def choose_move(self, previous_player_move, previous_opponent_move, previous_payoff, rng):
         return rng.choice(MOVES)
 
 
 @dataclass(frozen=True)
-class BiasedOpponent:
+class RockBiasedOpponent:
+    """Choose Rock more often, independently of previous rounds."""
+
     probabilities: tuple[float, float, float] = (0.60, 0.25, 0.15)
 
     def choose_move(self, previous_player_move, previous_opponent_move, previous_payoff, rng):
@@ -34,7 +38,7 @@ class BiasedOpponent:
 
 
 @dataclass(frozen=True)
-class ReactiveOpponent:
+class PreviousMoveCounterOpponent:
     """Usually play the move that beats the player's previous move."""
 
     reaction_probability: float = 0.80
@@ -46,7 +50,7 @@ class ReactiveOpponent:
 
 
 @dataclass(frozen=True)
-class MarkovOpponent:
+class RepeatingMarkovOpponent:
     """Repeat the previous move with a configurable probability."""
 
     repeat_probability: float = 0.70

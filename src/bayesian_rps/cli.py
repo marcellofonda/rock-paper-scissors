@@ -4,10 +4,10 @@ import argparse
 from pathlib import Path
 
 from .opponents import (
-    BiasedOpponent,
-    MarkovOpponent,
-    RandomOpponent,
-    ReactiveOpponent,
+    PreviousMoveCounterOpponent,
+    RepeatingMarkovOpponent,
+    RockBiasedOpponent,
+    UniformRandomOpponent,
     WinStayLoseShiftOpponent,
 )
 from .simulation import simulate
@@ -15,17 +15,19 @@ from .visualization import plot_game
 
 
 OPPONENTS = {
-    "random": RandomOpponent,
-    "biased": BiasedOpponent,
-    "markov": MarkovOpponent,
-    "reactive": ReactiveOpponent,
+    "uniform-random": UniformRandomOpponent,
+    "rock-biased": RockBiasedOpponent,
+    "repeating-markov": RepeatingMarkovOpponent,
+    "previous-move-counter": PreviousMoveCounterOpponent,
     "win-stay-lose-shift": WinStayLoseShiftOpponent,
 }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Simulate a Bayesian RPS player")
-    parser.add_argument("--opponent", choices=OPPONENTS, default="reactive")
+    parser.add_argument(
+        "--opponent", choices=OPPONENTS, default="previous-move-counter"
+    )
     parser.add_argument("--rounds", type=int, default=500)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
