@@ -1,7 +1,7 @@
 [project]
 site_url = "https://marcellofonda.github.io/rock-paper-scissors"
 site_name = "Bayesian Rock-Paper-Scissors"
-# site_description = "Your project description"
+site_description = "A Bayesian glimpse at the classic Rock-Paper-Scissors game."
 site_author = "Marcello Fonda"
 
 # copyright = "Copyright &copy; 2026 Your name"
@@ -14,6 +14,7 @@ nav = [
   { "Welcome" = "index.md" },
   { "The Bayesian Model" = "model.md" },
   { "From Model to Code" = "implementation.md" },
+  { "Experiments" = "experiments.md" },
 ]
 
 # extra_css = ["stylesheets/extra.css"]

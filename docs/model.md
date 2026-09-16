@@ -1,3 +1,7 @@
+---
+icon: lucide/square-sigma
+---
+
 # The Bayesian Model
 
 We effectively model the game as a Markovian process, where the next move is selected based on the current context.

@@ -24,6 +24,7 @@ dist/
 
 # Generated experiment outputs
 results/
+!experiments/results
 
 # Zensical generated files
 site/
